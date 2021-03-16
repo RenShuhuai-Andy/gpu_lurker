@@ -21,7 +21,7 @@ import psutil
 import pynvml as N
 from blessed import Terminal
 
-import util as util
+from .util import bytes2human, prettify_commandline
 
 NOT_SUPPORTED = 'Not Supported'
 MB = 1024 * 1024
@@ -298,9 +298,9 @@ class GPUStat(object):
             )
             r += "{C0}({CCPUUtil}{:4.0f}%{C0}, {CCPUMemU}{:>6}{C0})".format(
                 _repr(p['cpu_percent'], '--'),
-                util.bytes2human(_repr(p['cpu_memory_usage'], 0)), **colors
+                bytes2human(_repr(p['cpu_memory_usage'], 0)), **colors
             )
-            full_command_pretty = util.prettify_commandline(
+            full_command_pretty = prettify_commandline(
                 p['full_command'], colors['C1'], colors['CCmd'])
             r += "{C0}: {CCmd}{}{C0}".format(
                 _repr(full_command_pretty, '?'),
