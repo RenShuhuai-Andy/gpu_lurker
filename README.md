@@ -16,7 +16,7 @@
 $ pip install --upgrade gpulurker
 ```
 
-从 GitHub 上安装最新版本 (*推荐*):
+从 GitHub 上安装最新版本 (**推荐**):
 
 ```bash
 $ pip install git+https://github.com/RenShuhuai-Andy/gpu_lurker.git#egg=gpulurker
@@ -26,7 +26,7 @@ $ pip install git+https://github.com/RenShuhuai-Andy/gpu_lurker.git#egg=gpulurke
 
 ```bash
 $ git clone --depth=1 https://github.com/RenShuhuai-Andy/gpu_lurker.git
-$ cd gpulurker
+$ cd gpu_lurker
 $ pip install .
 ```
 
@@ -45,11 +45,29 @@ $ gpulurker -m 1000 -n 8 -f '*|*|*/30'
 - `-n`, `--device-num`: 所需的 GPU 数
 - `-f`, `--check-freq`: 检查服务器状态的间隔时间
 - `-r`, `--reload`: 重新输入用户信息
+- `-c`, `--continuous`: 满足条件时持续推送消息 (默认关闭)
 
 键入 `ctrl+c` 终止监控。
 
 键入 `gpulurker --help` 以获得更多信息:
+```
+usage: gpulurker [-h] [-m CUDA_MEMORY] [-n DEVICE_NUM] [-f CHECK_FREQ] [-r]
+                 [--log_file LOG_FILE]
 
+check if gpu is available and notify on your WeChat
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m CUDA_MEMORY, --cuda-memory CUDA_MEMORY
+                        Required CUDA memory per device
+  -n DEVICE_NUM, --device-num DEVICE_NUM
+                        Required number of devices
+  -f CHECK_FREQ, --check-freq CHECK_FREQ
+                        corntab format time, eg. (*|*|*/10)
+  -r, --reload          Reload and update your appToken and uid
+  -c, --continuous      Continue to push message when the conditions are met
+  --log_file LOG_FILE   define the threshold of avaliable (in MB)
+```
 
 ## Screenshots
 

@@ -12,7 +12,10 @@ parser = argparse.ArgumentParser(description='check if gpu is available and noti
 parser.add_argument('-m', '--cuda-memory', type=float, default=1000, help='Required CUDA memory per device')
 parser.add_argument('-n', '--device-num', type=int, default=1, help='Required number of devices')
 parser.add_argument('-f', '--check-freq', type=str, default='*|*|*/10', help='corntab format time, eg. (*|*|*/10)')
-parser.add_argument('-r', '--reload', default=False, action='store_true', help='Reload and update your appToken and uid')
+parser.add_argument('-r', '--reload', default=False, action='store_true',
+                    help='Reload and update your appToken and uid')
+parser.add_argument('-c', '--continuous', default=False, action='store_true',
+                    help='Continue to push message when the conditions are met')
 parser.add_argument('--log_file', type=str, default="gpu.log", help='define the threshold of avaliable (in MB)')
 
 args = parser.parse_args()
@@ -23,7 +26,6 @@ os.stderr = f
 
 appToken = ""
 uid = ""
-
 
 empty_card = []
 
@@ -52,6 +54,8 @@ def job():
         current_time = time.strftime('%Y-%m-%d@%H-%M')
         print("send to wechat at {}".format(current_time), flush=True)
         push_to_wechat(gpu_stats)
+        if not args.continuous:
+            scheduler.shutdown()
 
 
 def push_to_wechat(gpu_stats):
