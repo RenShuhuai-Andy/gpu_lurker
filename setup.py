@@ -33,8 +33,7 @@ setup(
         'blessed',
         'apscheduler',
         'requests',
-        'argparse',
-        'logging'
+        'argparse'
     ],
     python_requires='>=3.5, <4',
     classifiers=[
