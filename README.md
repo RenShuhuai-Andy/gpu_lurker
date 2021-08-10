@@ -6,7 +6,7 @@
 ![Top Language](https://img.shields.io/github/languages/top/RenShuhuai-Andy/gpu_lurker?label=Python)
 ![License](https://img.shields.io/github/license/RenShuhuai-Andy/gpu_lurker?label=License)
 
-服务器 GPU 监控程序，当 GPU 属性满足预设条件时通过微信发送提示消息
+服务器 GPU 监控程序，当 GPU 属性满足预设条件 (如至少 4 张卡的显存多于 1000M) 时通过微信发送提示消息。
 
 ## 安装
 
@@ -32,19 +32,37 @@ $ pip install .
 
 ## 使用
 
-#### 示例
+### 在WxPusher微信推送服务上注册并且创建应用
+1. 进入[https://wxpusher.zjiecode.com/admin/login](https://wxpusher.zjiecode.com/admin/login)，使用微信扫码关注「新消息服务」公众号并完善信息。
+
+2. 创建新的应用，创建成功后请保存好显示的 **APP_TOKEN**
+<p align="center">
+  <img align="middle" src="./figures/new_app.png" alt="new_app"/>
+</p>
+
+3. 微信扫码关注应用
+<p align="center">
+  <img align="middle" src="./figures/subscribe.png" alt="subscribe"/>
+</p>
+
+4. 进入「新消息服务」公众号，点击「我的」-「我的UID」获取 **UID**
+
+
+### 在服务器上输入命令进行 GPU 监控
 
 ```bash
 # 每隔 30 分钟检查服务器状态，当有 8 张卡，每张卡的显存多余 1000M 时，向微信发送提示消息
-$ gpulurker -m 1000 -n 8 -f '*|*|*/30'
+$ gpulurker -m 1000 -n 8 -f 30m
 ```
+
+首次使用时需要输入自己的 **UID** 和 **APP_TOKEN**。
 
 #### 主要参数
 
-- `-m`, `--cuda-memory`: 每张卡所需的显存
-- `-n`, `--device-num`: 所需的 GPU 数
-- `-f`, `--check-freq`: 检查服务器状态的间隔时间
-- `-r`, `--reload`: 重新输入用户信息
+- `-m`, `--cuda-memory`: 每张卡所需的显存 (默认为 5000 MB)
+- `-n`, `--device-num`: 所需的 GPU 数 (默认为 1 块)
+- `-f`, `--check-freq`: 检查服务器状态的间隔时间，如1d (1天)，1h (1小时)，1m (1分钟)，1s (1秒)，1h30m (1小时30分钟) 等。默认为 10 分钟
+- `-r`, `--reload`: 重新输入用户信息 (默认关闭)
 - `-c`, `--continuous`: 满足条件时持续推送消息 (默认关闭)
 
 键入 `ctrl+c` 终止监控。
@@ -63,7 +81,7 @@ optional arguments:
   -n DEVICE_NUM, --device-num DEVICE_NUM
                         Required number of devices
   -f CHECK_FREQ, --check-freq CHECK_FREQ
-                        corntab format time, eg. (*|*|*/10)
+                        Frequency of inspection, eg. 10m (10 minutes)
   -r, --reload          Reload and update your appToken and uid
   -c, --continuous      Continue to push message when the conditions are met
   --log_file LOG_FILE   define the threshold of avaliable (in MB)
@@ -77,6 +95,7 @@ optional arguments:
 - [check_gpu_usage_and_forward_wechat](https://github.com/mzy97/check_gpu_usage_and_forward_wechat)
 - [nvitop](https://github.com/XuehaiPan/nvitop)
 
+微信消息实时推送服务由 [WxPusher](https://github.com/wxpusher/wxpusher-client) 提供。
 ## 许可证
 
 GNU General Public License, version 3 (GPLv3)
