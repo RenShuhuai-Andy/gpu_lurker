@@ -2,21 +2,21 @@ import requests
 from .gpustat import GPUStatCollection
 from apscheduler.schedulers.blocking import BlockingScheduler
 import json
-import logging
 import time
 import argparse
 import os
+import re
 
 parser = argparse.ArgumentParser(description='check if gpu is available and notify on your WeChat')
 # config args
-parser.add_argument('-m', '--cuda-memory', type=float, default=1000, help='Required CUDA memory per device')
+parser.add_argument('-m', '--cuda-memory', type=float, default=5000, help='Required CUDA memory per device')
 parser.add_argument('-n', '--device-num', type=int, default=1, help='Required number of devices')
-parser.add_argument('-f', '--check-freq', type=str, default='*|*|*/10', help='corntab format time, eg. (*|*|*/10)')
+parser.add_argument('-f', '--check-freq', type=str, default='10m', help='Frequency of inspection, eg. 10m (10 minutes)')
 parser.add_argument('-r', '--reload', default=False, action='store_true',
                     help='Reload and update your appToken and uid')
 parser.add_argument('-c', '--continuous', default=False, action='store_true',
                     help='Continue to push message when the conditions are met')
-parser.add_argument('--log_file', type=str, default="gpu.log", help='define the threshold of avaliable (in MB)')
+parser.add_argument('--log_file', type=str, default="gpu.log", help='define the threshold of available (in MB)')
 
 args = parser.parse_args()
 
@@ -31,12 +31,16 @@ empty_card = []
 
 scheduler = BlockingScheduler()
 
-time_parser = args.check_freq
-time_parser = time_parser.split('|')
+time_parser = []
+for type in ['d', 'h', 'm', 's']:
+    value = re.findall(r'\d+(?=%s)' % type, args.check_freq)
+    value = int(value[0]) if len(value) > 0 else 0
+    time_parser.append(value)
 
 
 # check the GPU every 30 min
-@scheduler.scheduled_job('cron', day=time_parser[0], hour=time_parser[1], minute=time_parser[2])
+@scheduler.scheduled_job('interval', days=time_parser[0], hours=time_parser[1], minutes=time_parser[2],
+                         seconds=time_parser[3])
 def job():
     gpu_stats = GPUStatCollection.new_query()
     current_time = time.strftime('%Y-%m-%d@%H-%M')
@@ -55,7 +59,7 @@ def job():
         print("send to wechat at {}".format(current_time), flush=True)
         push_to_wechat(gpu_stats)
         if not args.continuous:
-            scheduler.shutdown()
+            scheduler.shutdown(wait=False)
 
 
 def push_to_wechat(gpu_stats):
