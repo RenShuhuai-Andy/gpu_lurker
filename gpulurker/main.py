@@ -43,9 +43,8 @@ for type in ['d', 'h', 'm', 's']:
                          seconds=time_parser[3])
 def job():
     gpu_stats = GPUStatCollection.new_query()
-    current_time = time.strftime('%Y-%m-%d@%H-%M')
-    print("check GPU at {}".format(current_time), flush=True)
-    print("current empty gpu ids {}".format(empty_card), flush=True)
+    current_time = time.strftime('%Y/%m/%d %H:%M')
+    print("Check GPU at {}".format(current_time), flush=True)
     for i in gpu_stats.gpus:
         if i.memory_free >= args.cuda_memory:
             if i.index not in empty_card:
@@ -53,10 +52,11 @@ def job():
         else:
             if i.index in empty_card:
                 empty_card.remove(i.index)
+    print("The GPU ids that meets the conditions are {}".format(empty_card), flush=True)
 
     if len(empty_card) >= args.device_num:
-        current_time = time.strftime('%Y-%m-%d@%H-%M')
-        print("send to wechat at {}".format(current_time), flush=True)
+        current_time = time.strftime('%Y/%m/%d %H:%M')
+        print("Send to WeChat at {}".format(current_time), flush=True)
         push_to_wechat(gpu_stats)
         if not args.continuous:
             scheduler.shutdown(wait=False)
