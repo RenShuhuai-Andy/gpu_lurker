@@ -75,7 +75,7 @@ def push_to_wechat(gpu_stats):
         f'http://wxpusher.zjiecode.com/api/send/message',
         json={
             "appToken": appToken,
-            'summary': f'空闲的GPU是{empty_card}',
+            'summary': f'满足条件的GPU是{empty_card}',
             'content': f'{s}',
             "contentType": 1,
             "uids": [uid]
