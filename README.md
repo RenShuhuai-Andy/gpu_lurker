@@ -8,6 +8,16 @@
 
 服务器 GPU 监控程序，当 GPU 属性满足预设条件 (如至少有 4 张卡且每张卡的显存多于 1000M) 时通过微信发送提示消息。
 
+服务器上输入监控命令：
+<p align="center">
+  <img align="middle" src="./figures/demo_term.png" alt="new_app"/>
+</p>
+
+满足条件后发送消息到微信：
+<p align="center">
+  <img align="middle" src="./figures/demo_wx.png" alt="new_app"/>
+</p>
+
 ## 安装
 
 从 PyPI 上安装:
@@ -87,7 +97,6 @@ optional arguments:
   --log_file LOG_FILE   define the threshold of avaliable (in MB)
 ```
 
-
 ## 致谢
 本项目参考了以下仓库的代码：
 
@@ -95,6 +104,7 @@ optional arguments:
 - [nvitop](https://github.com/XuehaiPan/nvitop)
 
 微信消息实时推送服务由 [WxPusher](https://github.com/wxpusher/wxpusher-client) 提供。
+
 ## 许可证
 
 GNU General Public License, version 3 (GPLv3)
